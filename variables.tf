@@ -65,14 +65,8 @@ variable "subnet_cidr" {
 
 variable "vm_name" {
   type        = string
-  default     = "vm-ubuntu24-apache"
+  default     = "vm-ubuntu24-docker"
   description = "Virtual machine name"
-}
-
-variable "vm_count" {
-  type        = number
-  default     = 3
-  description = "Number of virtual machines to create"
 }
 
 variable "vm_size" {

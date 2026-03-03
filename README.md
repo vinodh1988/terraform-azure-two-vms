@@ -1,11 +1,11 @@
-# Terraform: Ubuntu 24 VM + Apache (Australia Central)
+# Terraform: Ubuntu 24 VM + Docker
 
 This project deploys:
 - Resource Group
 - Virtual Network + Subnet
 - Public IP + NSG (ports 22 and 80)
-- 3 Ubuntu 24.04 Linux VMs (`Standard_B2ats_v2`) with password-based SSH login
-- Apache2 with a default page showing the VM hostname
+- 1 Ubuntu 24.04 Linux VM (`Standard_B2ats_v2`) with password-based SSH login
+- Docker installed and started via cloud-init
 
 ## Prerequisites
 - Terraform v1.5+
@@ -61,17 +61,21 @@ Use either:
 
 ## Connectivity
 After apply, Terraform outputs:
-- `vm_names`
-- `vm_public_ips`
-- `website_urls`
-- `ssh_commands`
-
-Open the website in a browser using `website_url`. It displays:
-- `Running from <hostname>`
+- `vm_name`
+- `vm_public_ip`
+- `website_url`
+- `ssh_command`
 
 SSH (password-based) uses:
 - Username: `azureuser` (default)
 - Password: `Password@12345`
+
+Once connected, verify Docker:
+
+```powershell
+docker --version
+sudo systemctl status docker
+```
 
 ## Cleanup
 ```powershell

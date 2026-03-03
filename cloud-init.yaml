@@ -1,9 +1,13 @@
 #cloud-config
 package_update: true
 packages:
-  - apache2
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - docker.io
 
 runcmd:
-  - systemctl enable apache2
-  - systemctl restart apache2
-  - [ bash, -c, "echo \"<html><body><h1>Running from $(hostname)</h1></body></html>\" > /var/www/html/index.html" ]
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker ${admin_username}
