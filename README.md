@@ -6,6 +6,8 @@ This project deploys:
 - Public IP + NSG (ports 22 and 80)
 - 1 Ubuntu 24.04 Linux VM (`Standard_B2ats_v2`) with password-based SSH login
 - Docker installed and started via cloud-init
+- `net-tools` installed via cloud-init
+- Docker socket ownership set to `azureuser` via cloud-init
 
 ## Prerequisites
 - Terraform v1.5+

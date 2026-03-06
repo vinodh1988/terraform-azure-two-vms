@@ -6,8 +6,19 @@ packages:
   - gnupg
   - lsb-release
   - docker.io
+  - net-tools
+
+write_files:
+  - path: /etc/systemd/system/docker.service.d/10-docker-sock-owner.conf
+    permissions: '0644'
+    content: |
+      [Service]
+      ExecStartPost=/bin/chown ${admin_username}:${admin_username} /var/run/docker.sock
 
 runcmd:
+  - mkdir -p /etc/systemd/system/docker.service.d
+  - systemctl daemon-reload
   - systemctl enable docker
   - systemctl start docker
+  - chown ${admin_username}:${admin_username} /var/run/docker.sock
   - usermod -aG docker ${admin_username}
