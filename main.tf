@@ -73,6 +73,18 @@ resource "azurerm_network_security_group" "vm_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  security_rule {
+    name                       = "allow-20-20000"
+    priority                   = 120
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "20-20000"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_network_interface" "vm_nic" {
