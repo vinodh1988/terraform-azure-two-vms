@@ -13,6 +13,6 @@ subnet_name          = "snet-vm"
 subnet_cidr          = "10.10.1.0/24"
 
 vm_name              = "vm-ubuntu24-docker"
-vm_size              = "Standard_B1ms"
+vm_size              = "Standard_B2s"
 admin_username       = "azureuser"
 admin_password       = "Password@12345"
