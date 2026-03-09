@@ -2,6 +2,7 @@
 package_update: true
 packages:
   - ca-certificates
+  - conntrack
   - curl
   - gnupg
   - lsb-release
@@ -9,16 +10,34 @@ packages:
   - net-tools
 
 write_files:
-  - path: /etc/systemd/system/docker.service.d/10-docker-sock-owner.conf
+  - path: /etc/systemd/system/minikube.service
     permissions: '0644'
     content: |
+      [Unit]
+      Description=Minikube Kubernetes Cluster
+      After=network-online.target docker.service
+      Wants=network-online.target
+      Requires=docker.service
+
       [Service]
-      ExecStartPost=/bin/chown ${admin_username}:${admin_username} /var/run/docker.sock
+      Type=oneshot
+      RemainAfterExit=yes
+      User=${admin_username}
+      Group=${admin_username}
+      WorkingDirectory=/home/${admin_username}
+      Environment=HOME=/home/${admin_username}
+      Environment=MINIKUBE_HOME=/home/${admin_username}/.minikube
+      ExecStart=/usr/local/bin/minikube start --driver=docker --profile=default
+      ExecStop=/usr/local/bin/minikube stop --profile=default
+      TimeoutStartSec=900
+
+      [Install]
+      WantedBy=multi-user.target
 
 runcmd:
-  - mkdir -p /etc/systemd/system/docker.service.d
-  - systemctl daemon-reload
-  - systemctl enable docker
-  - systemctl start docker
-  - chown ${admin_username}:${admin_username} /var/run/docker.sock
+  - systemctl enable --now docker
   - usermod -aG docker ${admin_username}
+  - [ bash, -lc, "KUBECTL_VERSION=$(curl -fsSL https://dl.k8s.io/release/stable.txt); curl -fsSL -o /usr/local/bin/kubectl https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl; chmod +x /usr/local/bin/kubectl" ]
+  - [ bash, -lc, "curl -fsSL -o /usr/local/bin/minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64; chmod +x /usr/local/bin/minikube" ]
+  - systemctl daemon-reload
+  - systemctl enable --now minikube

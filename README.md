@@ -1,4 +1,4 @@
-# Terraform: Ubuntu 24 VM + Docker
+# Terraform: Ubuntu 24 VM + Docker + Minikube
 
 This project deploys:
 - Resource Group
@@ -6,8 +6,10 @@ This project deploys:
 - Public IP + NSG (ports 22 and 80)
 - 1 Ubuntu 24.04 Linux VM (`Standard_B2ats_v2`) with password-based SSH login
 - Docker installed and started via cloud-init
+- Minikube and kubectl installed via cloud-init
+- Minikube auto-start enabled via systemd (`minikube.service`)
 - `net-tools` installed via cloud-init
-- Docker socket ownership set to `azureuser` via cloud-init
+- VM admin user added to `docker` group for Minikube Docker driver permissions
 
 ## Prerequisites
 - Terraform v1.5+
@@ -72,11 +74,16 @@ SSH (password-based) uses:
 - Username: `azureuser` (default)
 - Password: `Password@12345`
 
-Once connected, verify Docker:
+Once connected, verify Docker and Minikube:
 
 ```powershell
 docker --version
 sudo systemctl status docker
+minikube version
+kubectl version --client
+sudo systemctl status minikube
+minikube status
+kubectl get nodes
 ```
 
 ## Cleanup
